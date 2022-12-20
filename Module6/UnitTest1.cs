@@ -46,14 +46,24 @@ namespace Module6
 
             Thread.Sleep(5000);
             this.driver.FindElement(By.XPath("//a[contains(@aria-label, 'Drafts') and contains(., 'Drafts')]")).Click();
-            List<IWebElement> elementList = this.driver.FindElements(By.XPath("//span[@class='y2']")).ToList();
+            Thread.Sleep(5000);
+            var elementList = this.driver.FindElements(By.XPath("//div[@role='main']//span[@class='y2']")).ToList();
             List<string> bodyList = elementList.Select(element => element.Text).ToList();
-            Assert.That(bodyList.Contains("Test text"));
+            Assert.That(bodyList.Contains(" - \r\nTest text"));
 
             this.driver.FindElement(By.XPath("//span[contains(text(), 'Test text')]")).Click();
-            //Assert.That(listOfElements = this.driver.FindElements(By.XPath("//span[contains(text(), 'test text')]")).Displayed, Is.EqualTo(true));
+            Assert.That(bodyList.Contains(" - \r\nTest text"));
             this.driver.FindElement(By.XPath("//div[@aria-label='Send ‪(Ctrl-Enter)‬']")).Click();
-            Thread.Sleep(8000);
+            Thread.Sleep(5000);
+            Assert.AreEqual(true, this.driver.FindElement(By.XPath("//td[@class='TC']")).Displayed);
+
+            this.driver.FindElement(By.XPath("//a[@aria-label='Sent']")).Click();
+            Assert.That(bodyList.Contains(" - \r\nTest text"));
+
+            this.driver.FindElement(By.XPath("//img[@class='gb_Ia gbii']")).Click();
+            this.driver.SwitchTo().Frame(this.driver.FindElement(By.Name("account")));
+            Thread.Sleep(3000);
+            this.driver.FindElement(By.XPath("//a[contains(text(), 'Logout')]")).Click();
         }
     }
 }
