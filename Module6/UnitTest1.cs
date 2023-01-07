@@ -20,22 +20,26 @@ namespace Module6
             this.driver.Navigate().GoToUrl(baseUrl);
             this.driver.Manage().Window.Maximize();
         }
+ 
 
         [Test]
         public void testLogin()
         {
-            this.driver.FindElement(By.XPath("//a[text()='Sign in']")).Click();
-            this.driver.FindElement(By.Id("identifierId")).SendKeys("alexeytest00@gmail.com");
-            this.driver.FindElement(By.Id("identifierNext")).Click();
-            Thread.Sleep(3000);
-            this.driver.FindElement(By.XPath("//input[@type='password']")).SendKeys("123456aA$");
-            this.driver.FindElement(By.Id("passwordNext")).Click();
-            Thread.Sleep(8000);
-            this.driver.FindElement(By.XPath("//img[@class='gb_Ia gbii']")).Click();
-            this.driver.SwitchTo().Frame(this.driver.FindElement(By.Name("account")));
-            Thread.Sleep(3000);
-            Assert.That(driver.FindElement(By.XPath("//div/div[2][contains(text(), 'alexeytest00@gmail.com')]")).Displayed, Is.EqualTo(true));
-            this.driver.SwitchTo().DefaultContent();
+            new GmailPage(this.driver).ClickSignInButton();
+            // this.driver.FindElement(By.XPath("//a[text()='Sign in']")).Click();
+            new LoginPage(this.driver).Login();
+            // this.driver.FindElement(By.Id("identifierId")).SendKeys("alexeytest00@gmail.com");
+            // this.driver.FindElement(By.Id("identifierNext")).Click();
+            // Thread.Sleep(3000);
+            // this.driver.FindElement(By.XPath("//input[@type='password']")).SendKeys("123456aA$");
+            // this.driver.FindElement(By.Id("passwordNext")).Click();
+            // Thread.Sleep(8000);
+            new EmailPage(this.driver).Account();
+            // this.driver.FindElement(By.XPath("//img[@class='gb_Ia gbii']")).Click();
+            // this.driver.SwitchTo().Frame(this.driver.FindElement(By.Name("account")));
+            // Thread.Sleep(3000);
+            // Assert.That(driver.FindElement(By.XPath("//div/div[2][contains(text(), 'alexeytest00@gmail.com')]")).Displayed, Is.EqualTo(true));
+            // this.driver.SwitchTo().DefaultContent();
 
             this.driver.FindElement(By.XPath("//*[contains(text(), 'Compose')]")).Click();
             Thread.Sleep(3000);
@@ -43,21 +47,33 @@ namespace Module6
             this.driver.FindElement(By.Name("subjectbox")).SendKeys("Test");
             this.driver.FindElement(By.XPath("//div[@aria-label='Message Body']")).SendKeys("Test text");
             this.driver.FindElement(By.XPath("//img[@aria-label='Save & close']")).Click();
-            
+
             Thread.Sleep(5000);
             this.driver.FindElement(By.XPath("//a[contains(@aria-label, 'Drafts') and contains(., 'Drafts')]")).Click();
             List<IWebElement> elementList = this.driver.FindElements(By.XPath("//span[@class='y2']")).ToList();
-            List<string> bodyList = elementList.Select(element=>element.Text).ToList();
+            List<string> bodyList = elementList.Select(element => element.Text).ToList();
             Assert.That(bodyList.Contains("Test text"));
 
             this.driver.FindElement(By.XPath("//span[contains(text(), 'Test text')]")).Click();
             //Assert.That(listOfElements = this.driver.FindElements(By.XPath("//span[contains(text(), 'test text')]")).Displayed, Is.EqualTo(true));
-
             this.driver.FindElement(By.XPath("//div[@aria-label='Send ‪(Ctrl-Enter)‬']")).Click();
             Thread.Sleep(8000);
 
+            new SendLetter(this.driver).LetterSent();
+            // this.driver.FindElement(By.XPath("//span[contains(text(), 'Test text')]")).Click();
+            // this.driver.FindElement(By.XPath("//div[@aria-label='Send ‪(Ctrl-Enter)‬']")).Click();
+            // Thread.Sleep(8000);
+            // Assert.AreEqual(true, this.driver.FindElement(By.XPath("//td[@class='TC']")).Displayed);
 
+            new VerifyLetterInSent(this.driver).LetterInSentFolder();
+            // this.driver.FindElement(By.XPath("//a[@aria-label='Sent']")).Click();
+            // Assert.That(bodyList.Contains(" - \r\nTest text"));
 
+            new LogOut(this.driver).SignOut();
+            // this.driver.FindElement(By.XPath("//img[@class='gb_Ia gbii']")).Click();
+            // this.driver.SwitchTo().Frame(this.driver.FindElement(By.Name("account")));
+            // Thread.Sleep(3000);
+            // this.driver.FindElement(By.XPath("//a[contains(text(), 'Logout')]")).Click();
         }
     }
 }
